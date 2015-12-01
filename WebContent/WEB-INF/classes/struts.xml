@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+   "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+   "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.action.excludePattern" value=".*unfiltered.*,.*\\.nofilter"/>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.mapper.action.prefix.enabled" value="true" />
+	<package name="registeration" extends="struts-default">
+	
+		<action name="register" class="com.registration.RegisterAction"  method="executeRegister">
+			<result name="success">/WEB-INF/pages/registration/register-success.jsp</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="login" class="com.registration.RegisterAction"  method="executeLogin">
+			<result name="success" type="chain">ProfilePicAction</result>
+			<result name="error">/index.jsp</result>
+		</action>
+		<action name="ProfilePicAction" class="com.registration.ProfilePicAction" >
+			<result name="success">/WEB-INF/pages/registration/Profile-Settings.jsp</result>
+			<result name="error">/WEB-INF/pages/registration/Profile-Settings.jsp</result>
+		</action>
+		<!-- Niranjan's code start point for this package -->
+	<!-- home link action -->
+        <action name="homeAction" class="com.registration.RegisterAction" method="home">
+	<!--                 <interceptor-ref name="authStack" /> -->
+                <result name="login">index.jsp</result>
+                <result name="success" type="chain">/WEB-INF/pages/registration/Profile-Settings.jsp</result>
+        </action>
+        <!-- logout action -->
+        <action name="logOut" class="com.registration.RegisterAction" method="logOut">
+	<!--         <interceptor-ref name="defaultStack"></interceptor-ref>  -->
+                <result name="success">index.jsp</result>
+        </action>
+		<action name="uploadFiles" class="com.registration.FileUploadAction">
+		
+		<interceptor-ref name="fileUpload">
+			<param name="allowedTypes">image/jpeg,image/jpg</param>
+			<param name="maximumSize">4194304</param>
+		</interceptor-ref>
+  	    	<interceptor-ref name="params" />
+			<interceptor-ref name="validation" />
+			<interceptor-ref name="workflow" />
+	    <result name="success">/WEB-INF/pages/registration/Profile-Settings.jsp</result>
+	    <result name="input">/WEB-INF/pages/registration/register-error.jsp</result>
+		</action>
+	</package>
+	
+	<package name="groups" extends="struts-default">
+ 		<result-types>
+			<result-type name="imageResult" 
+						class="com.image.result.CustomImageBytesResult" />
+		</result-types>
+ 		<action name="imageAction" class="com.image.action.ImageAction">
+			<result name="success" type="imageResult"></result>
+		</action>
+ 		<action name="groupHomeAction" class="com.group.action.GroupHomeAction">
+			<result>/WEB-INF/pages/groups/grouphome.jsp</result>
+		</action>
+		<action name="getGroup" class="com.group.action.GroupHomeAction" method="GetGroupDetails">
+			<result name="success" type="chain">groupHomeAction</result>
+		</action>
+		<action name="getMembers" class="com.group.action.GroupHomeAction" method="GetGroupMembers">
+			<result name="success">/WEB-INF/pages/groups/viewmembers.jsp</result>
+			<result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+		</action>
+		<action name="deleteGroup" class="com.group.action.GroupHomeAction" method="DeleteGroup">
+			<result name="success">index.jsp</result>
+			<result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+		</action>
+		<action name="addGroupAction" class="com.group.action.AddGroupAction">
+			<result name="success">/WEB-INF/pages/groups/addgroup.jsp</result>
+		</action>
+		<action name="addGroup" class="com.group.action.AddGroupAction" method="CreateGroup">
+			<result name="success" type="chain">groupHomeAction</result>
+			<result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+		</action>
+		<action name="returnHome">
+			<result>index.jsp</result>
+		</action>
+ 	</package>
+ 	<package name="search" extends="struts-default">
+		<action name="Search" class="com.search.SearchFriendsAction"  method="executeSearch">
+			<result name="success">/WEB-INF/pages/search/search-success.jsp</result>
+			<result name="error">/WEB-INF/pages/search/search-error.jsp</result>
+		</action>
+		<action name="save" class="com.search.SearchFriendsAction"  method="executeSave">
+			<result name="success">/WEB-INF/pages/search/search-index.jsp</result>
+			<result name="error">/WEB-INF/pages/search/search-error.jsp</result>
+		</action>
+		<action name ="checkfriends" class="com.search.SearchFriendsAction" method="executeCheckFriends">
+			<result name="success">/WEB-INF/pages/search/retrieve-success.jsp</result>
+			<result name="error">/WEB-INF/pages/search/search-error.jsp</result>
+		</action>
+		<action name ="approve" class="com.search.SearchFriendsAction" method="executeAccept">
+			<result name="success">/WEB-INF/pages/search/Accept-success.jsp</result>
+			<result name="error">/WEB-INF/pages/search/search-error.jsp</result>
+		</action>
+		<action name ="reject" class="com.search.SearchFriendsAction" method="executeReject">	
+			<result name="clear">/WEB-INF/pages/search/Accept-error.jsp</result>
+		</action>
+	</package>
+	<!-- Niranjan's code start point -->
+	
+	
+	<package name="Newsandchat" namespace = "/" extends="struts-default">
+        <action name="Newsfeedpage" class="com.registration.RegisterAction" method="newsfeedpage">
+                <result name="success">/WEB-INF/pages/Newsfeed.jsp</result>
+        </action>
+          <action name="chatpage" class="com.registration.RegisterAction" method="chatpage">
+                <result name="success">/WEB-INF/pages/chat.jsp</result>
+        </action>
+        <!-- <action name="application" class="com.registration.RegisterAction" method="application">
+                <result name="success">application.jsp</result>
+        </action> -->
+        </package>
+        <package name="myhibernate" extends="hibernate-default">
+
+      <action name="addNewsfeed" method="execute" class="com.NewsFeed.Struts2.NewsFeedAction">
+         <result name="success" type="redirect">
+               listNewsfeeds
+         </result>
+         
+      </action>
+      <action name="refreshfeeds" method="refreshfeeds"  class="com.NewsFeed.Struts2.NewsFeedAction">
+         <result name="success">Newsfeed.jsp</result>
+         <result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+      </action>
+      <action name="listNewsfeeds" method="listNewsfeeds" class="com.NewsFeed.Struts2.NewsFeedAction">
+         <result name="success">Newsfeed.jsp</result>
+         <result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+      </action>
+      </package>
+      
+      <!-- news feed for groups -->
+      <package name="GroupNewsandchat" namespace = "/" extends="struts-default">
+        <action name="Newsgroupfeedpage" class="com.registration.RegisterAction" method="newsgroupfeedpage">
+                <result name="success">/WEB-INF/pages/groups/grouphome.jsp</result>
+        </action>
+<!--           <action name="chatpage" class="com.registration.RegisterAction" method="chatpage"> -->
+<!--                 <result name="success">/WEB-INF/pages/chat.jsp</result> -->
+<!--         </action> -->
+        <!-- <action name="application" class="com.registration.RegisterAction" method="application">
+                <result name="success">application.jsp</result>
+        </action> -->
+        </package>
+        <package name="myhibernategroup" extends="hibernate-default">
+
+      <action name="addgroupNewsfeed" method="execute" class="com.group.action.NewsFeedAction">
+         <result name="success" type="redirect">
+               listgroupNewsfeeds
+         </result>
+         
+      </action>
+
+      <action name="refreshgroupfeeds" method="refreshfeeds"  class="com.group.action.NewsFeedAction">
+         <result name="success">/WEB-INF/pages/groups/grouphome.jsp</result>
+         <result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+      </action>
+      <action name="listgroupNewsfeeds" method="listgroupNewsfeeds" class="com.group.action.NewsFeedAction">
+         <result name="success">/WEB-INF/pages/groups/grouphome.jsp</result>
+         <result name="error">/WEB-INF/pages/registration/register-error.jsp</result>
+      </action>
+      </package>
+      <!-- Niranjan's code end point -->
+</struts>
